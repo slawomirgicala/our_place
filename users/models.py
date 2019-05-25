@@ -8,10 +8,13 @@ from flat.models import Flat
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    flats = models.ManyToManyField(Flat)
+    flats = models.ManyToManyField(Flat, related_name='profiles')
+    active_flat = models.ForeignKey(Flat, null=True, default=None,
+                                    on_delete=models.SET_DEFAULT,
+                                    related_name='active_profiles')
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return f'{self.user.username}!'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
