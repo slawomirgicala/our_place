@@ -9,3 +9,13 @@ class FlatCreationForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput()
         }
+
+
+class EnterFlatCreationForm(forms.ModelForm):
+    class Meta:
+        model = Flat
+        fields = ['name', 'password']
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+

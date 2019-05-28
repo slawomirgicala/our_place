@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import FlatCreationForm
+from .forms import FlatCreationForm, EnterFlatCreationForm
 from django.contrib import messages
-
-# Create your views here.
+from .models import Flat
+from django.core.exceptions import ObjectDoesNotExist
+#Create your views here.
 
 
 @login_required
@@ -41,3 +42,31 @@ def new_flat(request):
     else:
         form = FlatCreationForm()
     return render(request, 'flat/new_flat.html', {'form': form})
+
+
+@login_required
+def enter_flat(request):
+    if request.method == 'POST':
+        form = EnterFlatCreationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            password = form.cleaned_data['password']
+            try:
+                flat = Flat.objects.get(name=name)
+            except ObjectDoesNotExist:
+                messages.error(request, f'No such flat!')
+                return redirect('enter-flat')  # strona glowna mieszkania
+
+            if flat.password != password:
+                messages.error(request, f'Wrong password!')
+                return redirect('enter-flat')  # strona glowna mieszkania
+            else:
+                profile = request.user.profile
+                profile.flats.add(flat)
+                profile.active_flat = flat
+                profile.save()
+                messages.success(request, f'You entered a flat!')
+                return redirect('flat-home')  # strona glowna mieszkania
+    else:
+        form = FlatCreationForm()
+    return render(request, 'flat/enter_flat.html', {'form': form})
