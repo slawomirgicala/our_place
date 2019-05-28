@@ -1,6 +1,9 @@
 
 {% extends "flat/base.html" %}
 {% block content %}
+
+    <h1>Home sweet home...</h1>
+
     {% for profile in profiles %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ profile.image.url }}">
@@ -15,7 +18,7 @@
                 <input type="hidden" name="my_parameter" value="dosmth">
                 <input type="submit" value="Submit">
                 {% csrf_token %}
-                </form>
+              </form>
 {#            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>#}
 {#            <p class="article-content">{{ post.content }}</p>#}
           </div>
@@ -33,5 +36,5 @@
 {#          </div>#}
 {#        </article>#}
 {#    {% endfor %}#}
-    <h1>HOME</h1>
+
 {% endblock content %}

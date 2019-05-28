@@ -1,5 +1,5 @@
 from django import forms
-from .models import Flat
+from .models import Flat, Chore, Announcement
 
 
 class FlatCreationForm(forms.ModelForm):
@@ -18,4 +18,16 @@ class EnterFlatCreationForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput()
         }
+
+
+class ChoreCreationForm(forms.ModelForm):
+    class Meta:
+        model = Chore
+        fields = ['name']
+
+
+class AnnouncementCreationForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        fields = ['text']
 

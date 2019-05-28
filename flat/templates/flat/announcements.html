@@ -1,0 +1,29 @@
+{% extends "flat/base.html" %}
+{% block content %}
+
+    <h1>Announcements!</h1>
+    <a class="nav-item nav-link" href="{% url 'new-announcement' %}">What do you want to announce?</a>
+
+    {% for announcement in announcements %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ announcement.user.profile.image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ announcement.user }}</a>
+              <small class="text-muted">{{ announcement.date}}</small>
+            </div>
+
+              <p class="article-content"> {{ announcement.text }}</p>
+
+{#              <form action="" method="post">#}
+{#                <input type="hidden" name="my_parameter" value="dosmth">#}
+{#                <input type="submit" value="Submit">#}
+{#                {% csrf_token %}#}
+{#              </form>#}
+{#            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>#}
+{#            <p class="article-content">{{ post.content }}</p>#}
+          </div>
+        </article>
+    {% endfor %}
+
+{% endblock content %}
