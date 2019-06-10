@@ -1,7 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 # Create your models here.
+
+
+def validate_nonzero(value):
+    if value == 0:
+        raise ValidationError(
+            _('Quantity %(value)s is not allowed'),
+            params={'value': value},
+        )
 
 
 class Flat(models.Model):
@@ -23,7 +33,7 @@ class Product(models.Model):
 class Chore(models.Model):
     name = models.CharField(max_length=100)
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE)
-    period = models.IntegerField()
+    period = models.PositiveIntegerField(default=1, validators=[validate_nonzero])
     last_made = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

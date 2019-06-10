@@ -13,5 +13,8 @@ urlpatterns = [
     path('new_announcement', views.new_announcement, name='new-announcement'),
     path('add', views.addTodo, name='add'),
     path('complete/<todo_id>', views.completeTodo, name='complete'),
-    path('deletecomplete', views.deleteCompleted, name='deletecomplete')
+    path('deletecomplete', views.deleteCompleted, name='deletecomplete'),
+    path('your_chores/', views.your_chores, name='your-chores'),
+    path('completed_chore/<chore_id>', views.completed_chore, name='completed-chore'),
+    path('done_chores/', views.done_chores, name='done-chores')
 ]

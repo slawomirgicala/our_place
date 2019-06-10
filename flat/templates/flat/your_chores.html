@@ -1,0 +1,35 @@
+{% extends "flat/base.html" %}
+{% block content %}
+
+    <h1>Don't forget to do this!</h1>
+
+    {% for chore in chores %}
+        <article class="media content-section">
+{#          <img class="rounded-circle article-img" src="{{ profile.image.url }}">#}
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ chore.name }}</a>
+{#              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>#}
+            </div>
+               <small class="text-muted">
+                   Available from: {{ chore.start }}
+                   <br>
+                   Do this until: {{ chore.end }}
+               </small>
+
+              <br>
+              <a href="{% url 'completed-chore' chore.id %}"><button type="submit" class="btn btn-success">COMPLETED</button></a>
+
+
+{#              <form action="" method="post">#}
+{#                <input type="hidden" name="my_parameter" value="dosmth">#}
+{#                <input type="submit" value="Submit">#}
+{#                {% csrf_token %}#}
+{#              </form>#}
+{#            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>#}
+{#            <p class="article-content">{{ post.content }}</p>#}
+          </div>
+        </article>
+    {% endfor %}
+
+{% endblock content %}

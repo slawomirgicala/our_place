@@ -3,10 +3,13 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .forms import FlatCreationForm, EnterFlatCreationForm, ChoreCreationForm, AnnouncementCreationForm, TodoForm
 from django.contrib import messages
-from .models import Flat, Chore, Announcement, Todo
+from .models import Flat, Chore, Announcement, Todo, ChoreCounter, SpecificChore
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+from random import choice
+from datetime import datetime, timedelta
+from django.db.models import Min
 
 
 # Create your views here.
@@ -78,6 +81,11 @@ def enter_flat(request):
                 profile.flats.add(flat)
                 profile.active_flat = flat
                 profile.save()
+                chores = flat.chore_set
+                for chore in chores:
+                    counters = chore.chorecounter_set
+                    min_number = counters.aggregate(Min('number'))
+                    ChoreCounter(chore=chore, user=request.user, number=min_number).save()
                 messages.success(request, f'You entered a flat!')
                 return redirect('flat-home')  # strona glowna mieszkania
     else:
@@ -93,7 +101,14 @@ def new_chore(request):
             name = form.cleaned_data['name']
             flat = request.user.profile.active_flat
             period = form.cleaned_data['period']
-            Chore(name=name, flat=flat, period=period, last_made=timezone.now()).save()
+            chore = Chore(name=name, flat=flat, period=period, last_made=timezone.now())
+            chore.save()
+            profiles = request.user.profile.active_flat.profiles
+            for profile in profiles.iterator():
+                ChoreCounter(chore=chore, user=profile.user).save()
+            lucky = choice(profiles.all())
+            SpecificChore(user=lucky.user, flat=flat, start=timezone.now(),
+                          end=timezone.now()+timedelta(days=period), name=name).save()
             messages.success(request, f'Added new chore :c')
             return redirect('chores-list')
     else:
@@ -118,7 +133,7 @@ def announcements(request):
         return redirect('new-flat')
     else:
         context = {
-            'announcements': request.user.profile.active_flat.announcement_set.all()
+            'announcements': request.user.profile.active_flat.announcement_set.all().order_by('-date')
         }
         return render(request, 'flat/announcements.html', context)
 
@@ -167,3 +182,35 @@ def deleteCompleted(request):
 
     return redirect(home)
 
+
+@login_required
+def your_chores(request):
+    if request.user.profile.active_flat is None:
+        return redirect('new-flat')
+    else:
+        chores = SpecificChore.objects.filter(flat=request.user.profile.active_flat, user=request.user,
+                                              completed=False).order_by('start')
+        context = {
+            'chores': chores
+        }
+        return render(request, 'flat/your_chores.html', context)
+
+
+def completed_chore(request, chore_id):
+    chore = SpecificChore.objects.get(pk=chore_id)
+    chore.completed = True
+    chore.save()
+    return redirect(your_chores)
+
+
+@login_required
+def done_chores(request):
+    if request.user.profile.active_flat is None:
+        return redirect('new-flat')
+    else:
+        chores = SpecificChore.objects.filter(flat=request.user.profile.active_flat,
+                                              completed=True).order_by('-start')
+        context = {
+            'chores': chores
+        }
+        return render(request, 'flat/done_chores.html', context)

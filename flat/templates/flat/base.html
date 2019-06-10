@@ -42,6 +42,8 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="{% url 'chores-list' %}">Chores</a>
                       <a class="dropdown-item" href="{% url 'new-chore' %}">Add chore</a>
+                        <a class="dropdown-item" href="{% url 'done-chores' %}">Done chores</a>
+
 
                     </div>
                   </li>
@@ -85,7 +87,9 @@
             <h3>Our Sidebar</h3>
             <p class='text-muted'>Manage your time!
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Tasks</li>
+                <li class="list-group-item list-group-item-light">
+                    <a class="nav-item nav-link" href="{% url 'your-chores' %}">Tasks</a>
+                </li>
                 <li class="list-group-item list-group-item-light">
                     <a class="nav-item nav-link" href="{% url 'flat-announcements' %}">Announcements</a>
                 </li>
