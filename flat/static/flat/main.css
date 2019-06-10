@@ -82,3 +82,34 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+#wrapper {
+	margin-top: 10% !important;
+}
+#content {
+	background: #5f788a;;
+	padding: 25px;
+}
+#content > h2 {
+	font-size: 18px;
+	text-align: center;
+	padding-top: 0;
+}
+.t10 {
+	margin-top: 10px;
+}
+.t20 {
+	margin-top: 20px;
+}
+.todo-completed {
+	text-decoration: line-through;
+	background: #E23247;
+}
+
+footer {
+	margin-top: 20px;
+	color: white;
+}
+.list-group-item {
+	color: black;
+}

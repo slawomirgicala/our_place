@@ -23,7 +23,7 @@ class EnterFlatCreationForm(forms.ModelForm):
 class ChoreCreationForm(forms.ModelForm):
     class Meta:
         model = Chore
-        fields = ['name']
+        fields = ['name', 'period']
 
 
 class AnnouncementCreationForm(forms.ModelForm):
@@ -31,3 +31,9 @@ class AnnouncementCreationForm(forms.ModelForm):
         model = Announcement
         fields = ['text']
 
+
+class TodoForm(forms.Form):
+    text = forms.CharField(max_length=40,
+                           widget=forms.TextInput(
+                                                  attrs={'class': 'form-control', 'placeholder': 'Enter what we need',
+                                                         'aria-label': 'Todo', 'aria-describedby': 'add-btn'}))

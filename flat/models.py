@@ -23,9 +23,27 @@ class Product(models.Model):
 class Chore(models.Model):
     name = models.CharField(max_length=100)
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE)
+    period = models.IntegerField()
+    last_made = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
+
+
+class ChoreCounter(models.Model):
+    chore = models.ForeignKey(Chore, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    number = models.IntegerField(default=0)
+
+
+class SpecificChore(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    flat = models.ForeignKey(Flat, on_delete=models.CASCADE)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    name = models.CharField(max_length=100)
+    completed = models.BooleanField(default=False)
+    likes = models.IntegerField(default=0)
 
 
 class Announcement(models.Model):
@@ -36,3 +54,14 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Todo(models.Model):
+    text = models.CharField(max_length=40)
+    complete = models.BooleanField(default=False)
+    flat = models.ForeignKey(Flat, on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return self.text
+
+
