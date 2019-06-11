@@ -16,13 +16,13 @@
               <a class="mr-2" href="#">{{ profile }}</a>
 {#              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>#}
             </div>
-              Number of likes: {{ points }}
+              <span style='font-size:25px;'>{{ points }}  &#127775;</span>
 
-              <form action="" method="post">
-                <input type="hidden" name="my_parameter" value="dosmth">
-                <input type="submit" value="Submit">
-                {% csrf_token %}
-              </form>
+{#              <form action="" method="post">#}
+{#                <input type="hidden" name="my_parameter" value="dosmth">#}
+{#                <input type="submit" value="Submit">#}
+{#                {% csrf_token %}#}
+{#              </form>#}
 {#            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>#}
 {#            <p class="article-content">{{ post.content }}</p>#}
           </div>

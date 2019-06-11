@@ -17,12 +17,12 @@
                    BY: {{ chore.user.profile }}
                </small>
           <br>
-                {{ total_likes }} Likes
+                {{ like.1 }} Likes
 
                 <form action="{% url 'like_post' %}" method="post">
 {#                chore.user != user#}
                     {% csrf_token %}
-                    {% if like %}
+                    {% if like.0 %}
                         <button type="submit" name="post_id" value="{{ chore.id }}" class="btn btn-danger">Dislike</button>
                     {% else %}
                         <button type="submit" name="post_id" value="{{ chore.id }}" class="btn btn-success">Like</button>

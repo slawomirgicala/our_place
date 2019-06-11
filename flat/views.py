@@ -259,13 +259,13 @@ def done_chores(request):
         is_liked = {}
         for chore in chores:
             if chore.likes.filter(id=request.user.id).exists():
-                is_liked[chore] = True
+                is_liked[chore] = (True, chore.total_likes())
             else:
-                is_liked[chore] = False
+                is_liked[chore] = (False, chore.total_likes())
         context = {
             'is_liked': is_liked,
             'user': request.user,
-            'total_likes': chore.total_likes()
+            #'total_likes': chore.total_likes()
         }
         return render(request, 'flat/done_chores.html', context)
 
