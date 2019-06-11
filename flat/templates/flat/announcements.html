@@ -11,6 +11,9 @@
             <div class="article-metadata">
               <a class="mr-2" href="#">{{ announcement.user }}</a>
               <small class="text-muted">{{ announcement.date}}</small>
+                {% if announcement.user == user %}
+                 <a href="{% url 'delete-announcement' announcement.id %}"><span style='font-size:10px;'>&#10060;</span></a>
+                {% endif %}
             </div>
 
               <p class="article-content"> {{ announcement.text }}</p>

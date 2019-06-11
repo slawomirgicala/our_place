@@ -54,6 +54,7 @@ class SpecificChore(models.Model):
     name = models.CharField(max_length=100)
     completed = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)
+    #who_likes = models.ManyToManyField(User, related_name='liked_chores')
 
 
 class Announcement(models.Model):

@@ -9,9 +9,14 @@
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="#">{{ chore }}</a>
+                <a href="{% url 'delete-chore' chore.id %}"><span style='font-size:10px;'>&#10060;</span></a>
 {#              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>#}
             </div>
-
+              {% if chore.period == 1 %}
+               <p class="article-content">Chore is done everyday</p>
+              {% else %}
+               <p class="article-content">Chore is done every {{ chore.period }} days</p>
+              {% endif %}
 
 {#              <form action="" method="post">#}
 {#                <input type="hidden" name="my_parameter" value="dosmth">#}

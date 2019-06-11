@@ -18,7 +18,11 @@
                </small>
 
               <br>
-              <a href="#"><button type="submit" class="btn btn-success">LIKE</button></a>
+              {% if chore.user != user %}
+{#                  {% if chore.who_likes %}#}
+
+                  <a href="#"><button type="submit" class="btn btn-success">LIKE</button></a>
+              {% endif %}
 
 
 {#              <form action="" method="post">#}

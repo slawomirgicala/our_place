@@ -16,5 +16,8 @@ urlpatterns = [
     path('deletecomplete', views.deleteCompleted, name='deletecomplete'),
     path('your_chores/', views.your_chores, name='your-chores'),
     path('completed_chore/<chore_id>', views.completed_chore, name='completed-chore'),
-    path('done_chores/', views.done_chores, name='done-chores')
+    path('done_chores/', views.done_chores, name='done-chores'),
+    path('delete_announcement/<ann_id>', views.delete_announcement, name='delete-announcement'),
+    path('delete_chore/<chore_id>', views.delete_chore, name='delete-chore')
+
 ]

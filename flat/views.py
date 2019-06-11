@@ -127,15 +127,28 @@ def chores_list(request):
         return render(request, 'flat/chores_list.html', context)
 
 
+def delete_chore(request, chore_id):
+    chore = Chore.objects.get(pk=chore_id)
+    chore.delete()
+    return redirect(chores_list)
+
+
 @login_required
 def announcements(request):
     if request.user.profile.active_flat is None:
         return redirect('new-flat')
     else:
         context = {
-            'announcements': request.user.profile.active_flat.announcement_set.all().order_by('-date')
+            'announcements': request.user.profile.active_flat.announcement_set.all().order_by('-date'),
+            'user': request.user
         }
         return render(request, 'flat/announcements.html', context)
+
+
+def delete_announcement(request, ann_id):
+    announcement = Announcement.objects.get(pk=ann_id)
+    announcement.delete()
+    return redirect(announcements)
 
 
 @login_required
@@ -188,6 +201,7 @@ def your_chores(request):
     if request.user.profile.active_flat is None:
         return redirect('new-flat')
     else:
+
         chores = SpecificChore.objects.filter(flat=request.user.profile.active_flat, user=request.user,
                                               completed=False).order_by('start')
         context = {
@@ -211,6 +225,7 @@ def done_chores(request):
         chores = SpecificChore.objects.filter(flat=request.user.profile.active_flat,
                                               completed=True).order_by('-start')
         context = {
-            'chores': chores
+            'chores': chores,
+            'user': request.user
         }
         return render(request, 'flat/done_chores.html', context)
