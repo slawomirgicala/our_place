@@ -18,6 +18,6 @@ urlpatterns = [
     path('completed_chore/<chore_id>', views.completed_chore, name='completed-chore'),
     path('done_chores/', views.done_chores, name='done-chores'),
     path('delete_announcement/<ann_id>', views.delete_announcement, name='delete-announcement'),
-    path('delete_chore/<chore_id>', views.delete_chore, name='delete-chore')
-
+    path('delete_chore/<chore_id>', views.delete_chore, name='delete-chore'),
+    path(r'^like/$', views.like_post, name='like_post')
 ]

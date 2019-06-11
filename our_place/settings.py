@@ -32,8 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'huey.contrib.djhuey',
-    'our_place.huey_app',
     'crispy_forms',
     'users.apps.UsersConfig',
     'flat.apps.FlatConfig',

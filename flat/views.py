@@ -10,6 +10,7 @@ from django.utils import timezone
 from random import choice
 from datetime import datetime, timedelta
 from django.db.models import Min
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -213,7 +214,7 @@ def your_chores(request):
         flat_chores = request.user.profile.active_flat.chore_set.all()
         for chore in flat_chores:
             if timezone.now() - chore.last_made > timedelta(days=chore.period):
-                print('hey')
+                #print('hey')
                 min_number = chore.chorecounter_set.aggregate(Min('number'))['number__min']
                 #print(min_number)
                 random_chore_counter = chore.chorecounter_set.all().filter(number=min_number)[0]
@@ -247,8 +248,28 @@ def done_chores(request):
     else:
         chores = SpecificChore.objects.filter(flat=request.user.profile.active_flat,
                                               completed=True).order_by('-start')
+        is_liked = {}
+        for chore in chores:
+            if chore.likes.filter(id=request.user.id).exists():
+                is_liked[chore] = True
+            else:
+                is_liked[chore] = False
         context = {
-            'chores': chores,
-            'user': request.user
+            'is_liked': is_liked,
+            'user': request.user,
+            'total_likes': chore.total_likes()
         }
         return render(request, 'flat/done_chores.html', context)
+
+
+@require_POST
+def like_post(request):
+    post = get_object_or_404(SpecificChore, id=int(request.POST.get('post_id')))
+    is_liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        is_liked = False
+    else:
+        post.likes.add(request.user)
+        is_liked = True
+    return redirect(done_chores)

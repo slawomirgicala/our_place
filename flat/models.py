@@ -53,8 +53,11 @@ class SpecificChore(models.Model):
     end = models.DateTimeField()
     name = models.CharField(max_length=100)
     completed = models.BooleanField(default=False)
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name='likes', blank=True)
     #who_likes = models.ManyToManyField(User, related_name='liked_chores')
+
+    def total_likes(self):
+        return self.likes.count()
 
 
 class Announcement(models.Model):
