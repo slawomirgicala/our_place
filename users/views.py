@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
-# Create your views here.
 
 
 def register(request):
@@ -30,11 +29,9 @@ def profile(request):
             p_form.save()
             messages.success(request, f'Your account has been updated!')
             return redirect('profile')
-
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm() #instance=request.user.profile)
-
+        p_form = ProfileUpdateForm()
     context = {
         'u_form': u_form,
         'p_form': p_form

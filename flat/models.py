@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-# Create your models here.
 
 
 def validate_nonzero(value):
@@ -16,7 +15,7 @@ def validate_nonzero(value):
 
 class Flat(models.Model):
     name = models.CharField(max_length=100)
-    password = models.CharField(max_length=20, default='jp2gmd')
+    password = models.CharField(max_length=20, default='qwerty')
 
     def __str__(self):
         return self.name
@@ -54,7 +53,6 @@ class SpecificChore(models.Model):
     name = models.CharField(max_length=100)
     completed = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name='likes', blank=True)
-    #who_likes = models.ManyToManyField(User, related_name='liked_chores')
 
     def total_likes(self):
         return self.likes.count()
@@ -77,5 +75,3 @@ class Todo(models.Model):
 
     def __str__(self):
         return self.text
-
-

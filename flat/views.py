@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .forms import FlatCreationForm, EnterFlatCreationForm, ChoreCreationForm, AnnouncementCreationForm, TodoForm
 from django.contrib import messages
@@ -8,23 +7,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from random import choice
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.db.models import Min
 from django.shortcuts import get_object_or_404
 
 
-# Create your views here.
-
-
 @login_required
 def home(request):
-    # if request.user.is_authenticated():
-
     if request.user.profile.active_flat is None:
         return redirect('new-flat')
     else:
-        todo_list = Todo.objects.filter(flat=request.user.profile.active_flat).order_by('id') #filter by active flat
-
+        todo_list = Todo.objects.filter(flat=request.user.profile.active_flat).order_by('id')
         form = TodoForm()
         profiles = request.user.profile.active_flat.profiles.all()
         profiles_points = {}
@@ -34,17 +27,12 @@ def home(request):
             for user_chore in user_chores:
                 points += user_chore.total_likes()
             profiles_points[profile] = points
-
         context = {
             'profiles_points': profiles_points,
             'todo_list': todo_list,
             'form': form
         }
         return render(request, 'flat/home.html', context)
-
-
-#    else:
-#        return redirect('login')
 
 
 def about(request):
@@ -62,8 +50,7 @@ def new_flat(request):
             profile.active_flat = flat
             profile.save()
             messages.success(request, f'You have created a new flat!')
-            return redirect('flat-home')  # strona glowna mieszkania
-
+            return redirect('flat-home')
     else:
         form = FlatCreationForm()
     return render(request, 'flat/new_flat.html', {'form': form})
@@ -80,11 +67,10 @@ def enter_flat(request):
                 flat = Flat.objects.get(name=name)
             except ObjectDoesNotExist:
                 messages.error(request, f'No such flat!')
-                return redirect('enter-flat')  # strona glowna mieszkania
-
+                return redirect('enter-flat')
             if flat.password != password:
                 messages.error(request, f'Wrong password!')
-                return redirect('enter-flat')  # strona glowna mieszkania
+                return redirect('enter-flat')
             else:
                 if flat in request.user.profile.flats.all():
                     profile = request.user.profile
@@ -102,7 +88,7 @@ def enter_flat(request):
                         min_number = counters.aggregate(Min('number'))['number__min']
                         ChoreCounter(chore=chore, user=request.user, number=min_number).save()
                     messages.success(request, f'You entered a flat!')
-                    return redirect('flat-home')  # strona glowna mieszkania
+                    return redirect('flat-home')
     else:
         form = FlatCreationForm()
     return render(request, 'flat/enter_flat.html', {'form': form})
@@ -182,35 +168,31 @@ def new_announcement(request):
                 user = request.user
                 Announcement(text=text, flat=flat, user=user).save()
                 messages.success(request, f'succesfully announced')
-                return redirect('flat-announcements')  # lita obowiazkow
+                return redirect('flat-announcements')
         else:
             form = AnnouncementCreationForm()
     return render(request, 'flat/new_announcement.html', {'form': form})
 
 
 @require_POST
-def addTodo(request):
+def add_todo(request):
     form = TodoForm(request.POST)
-
     if form.is_valid():
         new_todo = Todo(text=request.POST['text'])
         new_todo.flat = request.user.profile.active_flat
         new_todo.save()
-
     return redirect(home)
 
 
-def completeTodo(request, todo_id):
+def complete_todo(request, todo_id):
     todo = Todo.objects.get(pk=todo_id)
     todo.complete = True
     todo.save()
-
     return redirect(home)
 
 
-def deleteCompleted(request):
+def delete_completed(request):
     Todo.objects.filter(complete__exact=True, flat=request.user.profile.active_flat).delete()
-
     return redirect(home)
 
 
@@ -222,16 +204,13 @@ def your_chores(request):
         flat_chores = request.user.profile.active_flat.chore_set.all()
         for chore in flat_chores:
             if timezone.now() - chore.last_made > timedelta(days=chore.period):
-                #print('hey')
                 min_number = chore.chorecounter_set.aggregate(Min('number'))['number__min']
-                #print(min_number)
                 random_chore_counter = chore.chorecounter_set.all().filter(number=min_number)[0]
                 random_chore_counter.number += 1
                 random_chore_counter.save()
-                #user = (ChoreCounter.objects.filter(chore=chore).values_list('user')
-                #        .annotate(Min('number')).order_by('number')[0])
-                SpecificChore(user=random_chore_counter.user, flat=request.user.profile.active_flat, start=timezone.now(),
-                              end=timezone.now()+timedelta(days=chore.period), name=chore.name).save()
+                SpecificChore(user=random_chore_counter.user, flat=request.user.profile.active_flat,
+                              start=timezone.now(), end=timezone.now()+timedelta(days=chore.period),
+                              name=chore.name).save()
                 chore.last_made = timezone.now()
                 chore.save()
         your_active_chores = SpecificChore.objects.filter(flat=request.user.profile.active_flat, user=request.user,
@@ -265,7 +244,6 @@ def done_chores(request):
         context = {
             'is_liked': is_liked,
             'user': request.user,
-            #'total_likes': chore.total_likes()
         }
         return render(request, 'flat/done_chores.html', context)
 
@@ -273,11 +251,8 @@ def done_chores(request):
 @require_POST
 def like_post(request):
     post = get_object_or_404(SpecificChore, id=int(request.POST.get('post_id')))
-    is_liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
-        is_liked = False
     else:
         post.likes.add(request.user)
-        is_liked = True
     return redirect(done_chores)

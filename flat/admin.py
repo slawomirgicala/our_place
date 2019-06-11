@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Flat, Todo, Chore, Announcement, ChoreCounter, SpecificChore
-# Register your models here.
+
 
 admin.site.register(Flat)
 admin.site.register(Todo)
