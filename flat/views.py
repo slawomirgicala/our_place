@@ -26,9 +26,17 @@ def home(request):
         todo_list = Todo.objects.filter(flat=request.user.profile.active_flat).order_by('id') #filter by active flat
 
         form = TodoForm()
+        profiles = request.user.profile.active_flat.profiles.all()
+        profiles_points = {}
+        for profile in profiles:
+            user_chores = SpecificChore.objects.filter(user=profile.user)
+            points = 0
+            for user_chore in user_chores:
+                points += user_chore.total_likes()
+            profiles_points[profile] = points
 
         context = {
-            'profiles': request.user.profile.active_flat.profiles.all(),
+            'profiles_points': profiles_points,
             'todo_list': todo_list,
             'form': form
         }
